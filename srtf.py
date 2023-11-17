@@ -1,3 +1,4 @@
+import csv
 
 class Process:
   """
@@ -64,7 +65,24 @@ def print_processes(process_list):
   average_waiting_time = total_waiting_time / len(process_list)
   print("Average waiting time: {:.1f}".format(average_waiting_time))
 
+def read_csv_input(filename):
+    with open(filename, 'r') as file:
+        reader = csv.reader(file, delimiter=' ')
 
+        # Read the first line for scheduling algorithm, number of processes, and time slice
+        x, y, z = map(int, next(reader))
+        process_list =[]
+        
+        #objects of process list only applies to srtf 
+        #if user chose SRTF, make process_list
+        if x == 2:
+          for _ in range(y):
+              p_id, at, bt = map(int, next(reader))
+              process = Process(p_id, at, bt)
+              process_list.append(process)
+        #TODO: add elif for other algos
+    return x, y, z, process_list
+  
 def srtf(process_list):
   """
   Executes shortest remaining time first on a list of processes.
@@ -162,29 +180,10 @@ def srtf(process_list):
   
   return done_processes
 
-xyz = input("Input: ")
-input_xyz = xyz.split()
+#Change filename to name of csv file in the same directory
+filename = "input05.txt"
 
-x = int(input_xyz[0])
-y = int(input_xyz[1])
-z = int(input_xyz[2])
-
-
-
-process_list = []
-while y > 0:
-  abc = input("Enter process details:")
-
-  splitted_abc = abc.split()
-
-  p_id = int(splitted_abc[0])
-  at = int(splitted_abc[1])
-  bt = int(splitted_abc[2])
-
-  new_process = Process(p_id, at, bt)
-
-  process_list.append(new_process)
-  y -= 1
+x, y, z, process_list = read_csv_input(filename)
 
 if x == 0:
     print('Executing first come first first served.')
