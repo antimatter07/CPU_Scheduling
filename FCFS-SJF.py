@@ -20,7 +20,6 @@ def FCFS(id, AT, BT):
   for i in range(len(ST)):
     print(str(idCopy[i]) + " start time: " + str(ST[i]) + " end time: " + str(ET[i]) + " | waiting time: " + str(WTs[i]))
   print("Average waiting time: " + str(avgWT) + "\n")
-  Continue()
   
 def SJF(id, AT, BT):
   ST = [0] * len(id)
@@ -61,33 +60,32 @@ def SJF(id, AT, BT):
   for i in range(len(ST)):
     print(str(id[i]) + " start time: " + str(ST[i]) + " end time: " + str(ET[i])+ " | waiting time: " + str(WTs[i]))
   print("Average waiting time: " + str(avgWT) + "\n")
-  Continue()
+
+def getInput(filename):
+  with open(filename, 'r') as file:
+    data = file.read().splitlines()
+  file.close()
+  return data
+  
 def main():
-    print("Which Scheduling Algorithm will you run?\nAlso include the number of processes and the time slice values (Round Robin Only) separated by space\n(ex: 0 3 1)\n")
-    print("Input the corresponding number below: ")
-    print("  First-Come First-Serve -> 0")
-    print("  Shortest Job First -> 1\n")
-    choice = input("Input: ")
+    inputs = getInput("input03s.txt")
+    choice = inputs[0]
     res = []
     for i in choice.split():
       if i.isdigit():
           i = int(i) 
           res.append(i)
-  
-    if res[1] > 100 or res[1] < 3:
-      print("Number of processes must range from 3 to 100 only")
-      print("-----------------------------------------------------------------------------")
-      main()
+    inputs.pop(0)
 
     id = []
     AT = []
     BT = []
     arr = 0
-    print("Then, please input the Process ID, Arrival Times, and Burst Times of each process\nseparated by space (ex: 1 2 3)")
+
     for i in range(res[1]):
-      i = input("  Input: ")
+      s = inputs[i]
       arr = 0
-      for j in i.split():
+      for j in s.split():
         if j.isdigit():
             j = int(j)
             if arr == 0:
@@ -108,16 +106,5 @@ def main():
           print("Please enter the correct Algorithm number")
           print("-----------------------------------------------------------------------------")
           main()
-
-def Continue():
-    print("Will you try again? (Y/N)\n")
-    ans = input("Input: ")
-    if ans == "Y" or ans == "y":
-      print("-----------------------------------------------------------------------------")
-      main()
-    elif ans == "N" or ans == "n":
-      print("-----------------------------------------------------------------------------")
-      exit()
-
 
 main()  
