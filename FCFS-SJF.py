@@ -1,3 +1,5 @@
+import csv
+
 def FCFS(id, AT, BT):
   ST = []
   ET = []
@@ -63,12 +65,13 @@ def SJF(id, AT, BT):
 
 def getInput(filename):
   with open(filename, 'r') as file:
-    data = file.read().splitlines()
+    reader = csv.reader(file, delimiter = '\t')
+    data = [row[0] for row in reader]
   file.close()
   return data
   
 def main():
-    inputs = getInput("input03s.txt")
+    inputs = getInput("input01.txt")
     choice = inputs[0]
     res = []
     for i in choice.split():
