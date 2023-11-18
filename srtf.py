@@ -181,7 +181,7 @@ def srtf(process_list):
   return done_processes
 
 #Change filename to name of csv file in the same directory
-filename = "input05.txt"
+filename = "input01.txt"
 
 x, y, z, process_list = read_csv_input(filename)
 
@@ -193,7 +193,7 @@ elif x == 2:
     print('Executing shortest remaining time first.')
     
     done_processes = srtf(process_list)
-    print_processes(process_list)
+    print_processes(done_processes)
 elif x == 3:
     print('Executing round robin')
 
