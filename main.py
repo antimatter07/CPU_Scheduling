@@ -129,8 +129,6 @@ def print_processes(process_list):
   average_waiting_time = total_waiting_time / len(process_list)
   print("Average waiting time: {:.1f}".format(average_waiting_time))
 
-  # check if a process arrived in the given time
-    # if True, append it to the queue
 
 def round_robin(process_list, qt):
     """
@@ -146,8 +144,6 @@ def round_robin(process_list, qt):
     # init values
     cpu_time = 0
 
-    process_count = len(process_list)
-
     cur_process = None
 
     # sort process list by arrival time
@@ -157,13 +153,14 @@ def round_robin(process_list, qt):
 
     done_processes = []
     
-    # check if a process arrived in the given time
+    # check if processes arrived in the given time
     # if True, append it to the queue
-    def queue_arrived_process(time):
-        for process in scheduled_list:
-            if process.at == time:
-                queue.append(scheduled_list.pop(0))
-                break
+    def queue_arrived_process(cur_time):
+      for process in scheduled_list:
+          if process.at <= cur_time:
+              queue.append(scheduled_list.pop(0))
+          else:
+              break
 
     # while there is an unfinished process
     while scheduled_list or queue:
@@ -172,14 +169,14 @@ def round_robin(process_list, qt):
         
         # if a process is in queue
         if queue:
-                
+            
             # get the first item in the queue as the cur_process
             cur_process = queue.pop(0)
 
             # append a new start time
             start_time = cpu_time
             cur_process.start.append(start_time)
-
+            
             # update cpu_time, cur_process.bt, and queue
             # depending on the remaining burst time in cur_process
             if cur_process.bt > qt:
@@ -188,7 +185,8 @@ def round_robin(process_list, qt):
 
                 # queue any processes that arrived during
                 # the cur_process run time
-                for t in range(start_time, cpu_time):
+                if scheduled_list:
+                  for t in range(start_time, cpu_time):
                     queue_arrived_process(t)
 
                 # append the current process to the end of the queue
@@ -197,6 +195,13 @@ def round_robin(process_list, qt):
             else:
                 cpu_time += cur_process.bt
                 cur_process.bt = 0
+
+                # queue any processes that arrived during
+                # the cur_process run time
+                if scheduled_list:
+                  for t in range(start_time, cpu_time):
+                    queue_arrived_process(t)
+                  
                 done_processes.append(cur_process)
 
             # append a new end time
@@ -361,12 +366,12 @@ def read_processes(filename):
     return data
   
 #Change filename to csv file with data
-filename = "sjf1.txt"
+filename = "input.txt"
 
 x, y, z = read_first_line_csv(filename)
 
 if x == 0:
-    print('Executing first come first first served.')
+    print('Executing first come first first served (FCFS)')
     process_info = read_processes(filename)
     id = []
     AT = []
@@ -393,7 +398,7 @@ if x == 0:
     
     
 elif x == 1:
-    print('Executing shortest job first')
+    print('Executing shortest job first (SJF)')
     
     process_info = read_processes(filename)
     id = []
@@ -420,14 +425,15 @@ elif x == 1:
     
     
 elif x == 2: 
-    print('Executing shortest remaining time first.')
+    print('Executing shortest remaining time first (SRTF)')
     
     process_list = read_process_list_preemptive(filename, y)
     
     done_processes = srtf(process_list)
     print_processes(done_processes)
+
 elif x == 3:
-    print('Executing round robin')
+    print('Executing round robin (RR)')
     
     process_list = read_process_list_preemptive(filename, y)
     
